@@ -1,0 +1,10 @@
+# Rust build outputs
+/target/
+
+# Gate 6 generated binaries
+/gate6-nmoracle
+
+# Test data
+testdata/*
+!testdata/ci/
+!testdata/ci/*.yaml
