@@ -4,6 +4,22 @@
 
 `bamdriver` is the low-level I/O layer extracted for reuse by `xenofilx` and `pairbam`. It is a library first; ordinary workflow users should invoke the higher-level operator that owns their data contract.
 
+## Proof
+
+The package tests need neither a network nor a reference genome:
+
+```text
+$ go test ./...
+ok  	github.com/otterlab-bio/bamdriver/cmd/bamroundtrip	(cached)
+ok  	github.com/otterlab-bio/bamdriver/cmd/nmoracle	(cached)
+ok  	github.com/otterlab-bio/bamdriver/pkg/bamnative	(cached)
+ok  	github.com/otterlab-bio/bamdriver/pkg/bgzip	(cached)
+```
+
+The two tools in that list are the reason this is a shared library rather than a copy per tool:
+`bamroundtrip` decodes a BAM, re-encodes it, and rebuilds its BAI as a preservation check, and
+`nmoracle` is the independent edit-distance oracle that `xenofilx` scores against.
+
 ## Packages
 
 - `pkg/bgzip` — BGZF reading, writing, and virtual-offset helpers.
