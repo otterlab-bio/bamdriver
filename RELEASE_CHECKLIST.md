@@ -12,8 +12,8 @@ go test ./...
 Run consumer smoke tests:
 
 ```bash
-cd ../xenofilter-go && go test ./...
-cd ../Paireads && go test ./...
+cd ../xenofilx && go test ./...
+cd ../pairbam && go test ./...
 ```
 
 ## 2) Tag and publish
@@ -21,24 +21,20 @@ cd ../Paireads && go test ./...
 In the `bamdriver` repo:
 
 ```bash
-./scripts/release.sh v0.1.0
+VERSION=vX.Y.Z
+./scripts/release.sh "$VERSION"
 git push origin main --tags
 ```
 
 ## 3) Upgrade consumers
 
-In `xenofilter-go/go.mod` and `Paireads/go.mod`:
+In `xenofilx/go.mod` and `pairbam/go.mod`:
 
-1. Change:
-
-```go
-require github.com/otterlab-bio/bamdriver v0.0.0
-```
-
-to:
+1. Change the existing bamdriver requirement (currently `v1.0.0` in both
+   consumers) to the release being published:
 
 ```go
-require github.com/otterlab-bio/bamdriver v0.1.0
+require github.com/otterlab-bio/bamdriver vX.Y.Z
 ```
 
 2. Remove local replace:
@@ -57,8 +53,9 @@ go test ./...
 Or from `bamdriver`:
 
 ```bash
-./scripts/update_consumer.sh ../xenofilter-go v0.1.0
-./scripts/update_consumer.sh ../Paireads v0.1.0
+VERSION=vX.Y.Z
+./scripts/update_consumer.sh ../xenofilx "$VERSION"
+./scripts/update_consumer.sh ../pairbam "$VERSION"
 ```
 
 ## 4) CI gate (recommended)
