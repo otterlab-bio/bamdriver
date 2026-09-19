@@ -25,6 +25,25 @@ The two tools in that list are the reason this is a shared library rather than a
 - `pkg/bgzip` — BGZF reading, writing, and virtual-offset helpers.
 - `pkg/bamnative` — BAM reading/writing, coordinate sorting, BAI indexing, FASTA access, and NM-related helpers.
 
+## Diagnostic CLIs
+
+These are evidence/debugging tools, not workflow operators:
+
+```bash
+# Decode/re-encode a BAM, emit a JSON report, and optionally build BAI.
+go run ./cmd/bamroundtrip roundtrip \
+  --input input.bam --output roundtrip.bam --report roundtrip.json --index
+
+# Compare two BAM streams and write a JSON comparison report.
+go run ./cmd/bamroundtrip compare \
+  --left expected.bam --right actual.bam --report compare.json
+
+# Independently recompute conventional/bisulfite NM and Xenofilx scores.
+go run ./cmd/nmoracle \
+  --input input.bam --reference genome.fa --report nm-summary.json \
+  --records per-record.tsv --limit 0
+```
+
 ## Use from a consumer
 
 During local multi-repository development:
