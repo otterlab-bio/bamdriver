@@ -1,0 +1,43 @@
+name: Native Platform Builds
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux-amd64
+            runner: ubuntu-24.04
+          - platform: linux-arm64
+            runner: ubuntu-24.04-arm
+          - platform: darwin-amd64
+            runner: macos-15-intel
+          - platform: darwin-arm64
+            runner: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.3'
+      - name: Compile all packages with cgo disabled
+        env:
+          CGO_ENABLED: '0'
+        run: go build -mod=readonly -buildvcs=false ./...
+      - name: Test the library
+        run: go test -short ./...
